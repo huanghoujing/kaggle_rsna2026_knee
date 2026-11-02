@@ -1,0 +1,17 @@
+.venv
+.venv/
+data/
+logs/
+experiments/
+*.pyc
+__pycache__/
+*.egg-info/
+*.pt
+*.pth
+*.npy
+*.parquet
+tmp/
+# generated Kaggle dataset folders (knee.submission.package, pipeline/0_wheels.sh); the notebook source is tracked
+kaggle/datasets/knee-code/knee/
+kaggle/datasets/knee-models/
+kaggle/datasets/knee-wheels/*.whl

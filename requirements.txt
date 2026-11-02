@@ -1,0 +1,23 @@
+# Dependencies of the environment (PyTorch is installed first by install.sh from the PyTorch index).
+numpy
+pandas
+pyarrow
+scikit-learn
+matplotlib
+tqdm
+pyyaml
+timm==1.0.30
+huggingface_hub
+# DICOM reading: pydicom + decoders for JPEG Lossless, JPEG-LS and JPEG 2000 transfer syntaxes
+pydicom>=3.0
+pylibjpeg>=2.0
+pylibjpeg-openjpeg
+pylibjpeg-libjpeg
+python-gdcm
+# Kaggle CLI (data download, datasets, notebook, submission)
+kaggle
+# stratified folds (knee.dataloading.folds)
+iterative-stratification
+# SKM-TEA (the tissue segmentation data): Redivis client and NIfTI masks (knee.dataloading.skm_tea)
+redivis
+nibabel

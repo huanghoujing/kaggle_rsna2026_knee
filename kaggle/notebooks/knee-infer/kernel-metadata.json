@@ -1,0 +1,21 @@
+{
+  "id": "houjinghuang/rsna-knee-v76-inference",
+  "title": "rsna-knee-v76-inference",
+  "code_file": "infer.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": false,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": [
+    "houjinghuang/rsna-knee-v76-wheels",
+    "houjinghuang/rsna-knee-v76-code",
+    "houjinghuang/rsna-knee-v76-models"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "kernel_sources": []
+}

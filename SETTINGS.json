@@ -1,0 +1,13 @@
+{
+  "DATA_DIR": "data",
+  "RAW_DATA_DIR": "raw/extracted",
+  "CACHE_DIR": "cache/v1",
+  "META_DIR": "meta",
+  "LABELS_DIR": "labels",
+  "MODEL_DIR": "models",
+  "RELEASE_DIR": "release",
+  "EXPERIMENTS_DIR": "experiments",
+  "LOGS_DIR": "logs",
+  "KAGGLE_DATASETS_DIR": "kaggle/datasets",
+  "SUBMISSION_DIR": "kaggle/datasets/knee-models"
+}

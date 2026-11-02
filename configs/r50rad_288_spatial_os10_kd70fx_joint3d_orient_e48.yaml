@@ -1,0 +1,65 @@
+# Ablation run D (public LB 0.966 / private 0.955; the writeup's ablation figure): the v76 recipe trained in one stage of
+# 48 epochs from the RadImageNet weights: random flips on all three axes + any-angle rotation, the joint transformer and
+# the orientation head (both training-only). Labels: targets_kd70f_x = 0.5 x the v70f ensemble's predictions + 0.5 x the
+# mean of the label sets the top teams shared after the deadline; the 58 expert-labelled studies at weight 0.8. Seed 42.
+name: r50rad_288_spatial_os10_kd70fx_joint3d_orient_e48
+data:
+  cache: data/cache/v1
+  targets: data/labels/targets_kd70f_x.parquet
+  folds: data/folds_v1.csv
+  val_targets: data/labels/targets_cx.parquet
+input:
+  k_slices: 16
+  max_series: 8
+  coverage:
+  - 0.05
+  - 0.95
+  coverage_jitter: 0.05
+  series_dropout: 0.1
+  orient_side: data/meta/laterality_train.parquet   # the knee side: only the target of the medial direction
+  aug:
+    out_px: 288
+    crop_mm: 160.0
+    fov_mm: 176.0
+    channels: center
+    p_mirror: 0.5                # random left-right flip of the original knee (labels unchanged: they are anatomical)
+    p_flip_up_down: 0.5          # one draw per study and axis
+    p_flip_front_back: 0.5
+    p_rotate: 0.5
+    rot_deg: 180.0               # any in-plane angle
+  tta_mirror: false            # no test-time mirror view
+model:
+  backbone: resnet50.a1_in1k
+  pretrained: false
+  dim: 384
+  depth: 0
+  heads: 6
+  drop_path: 0.1
+  dropout: 0.1
+  head: spatial
+  pretrained_path: convergedmachine/RadImagenet/resnet50.pth
+  joint_layers: 2               # the 3D joint transformer (training only)
+  orient_head: true             # the in-plane orientation of every window (training only)
+  joint_margin_mm: 10.0
+  joint_max_tokens: 12000
+train:
+  epochs: 48
+  batch_size: 6
+  eval_batch_size: 8
+  lr_backbone: 0.0001
+  lr_head: 0.001
+  orient_weight: 0.1            # next to the BCE (about 0.4)
+  lr_rope: 0.0001                # the learning rate of the joint transformer
+  weight_decay: 0.05
+  warmup_epochs: 1
+  min_lr_ratio: 0.01
+  ema_decay: 0.998
+  grad_clip: 2.0
+  num_workers: 16
+  eval_every: 4
+  ckpt_minutes: 5
+  seed: 42
+  sampling: rarity
+  rarity_power: 1.0
+  include_gold: true            # the 58 expert-labelled studies in training
+  gold_weight: 0.8

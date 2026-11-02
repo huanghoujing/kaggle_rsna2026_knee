@@ -1,0 +1,12 @@
+[project]
+name = "knee"
+version = "0.1.0"
+description = "RSNA 2026 Knee Abnormality Detection: data loading, labels, model, training, inference, evaluation, submission"
+requires-python = ">=3.10"
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["knee*"]

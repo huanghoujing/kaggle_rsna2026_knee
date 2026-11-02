@@ -1,0 +1,67 @@
+# v76 (the efficiency-track submission, public LB 0.962 / private 0.950): single model 8 (release file
+# single_model_8_*.pt, public LB 0.962) fine-tuned 3 epochs on targets_kd70f = the predictions of the v70f ensemble
+# (6 models, public LB 0.963) on every training study, with the 58 expert-labelled studies at sampling weight 0.8.
+# Model: ResNet-50 (RadImageNet) + label queries, random flips on all axes and any-angle rotation, the orientation head
+# and the joint transformer in training (both dropped at test time: knee.submission.drop_joint). docs/training.md.
+name: r50rad_288_spatial_os10_kd56_joint3d_orient_ft8_pl5m_bksyn_gold2_ft8_kd70f_ft3
+data:
+  cache: data/cache/v1
+  targets: data/labels/targets_kd70f.parquet
+  folds: data/folds_v1.csv
+  val_targets: data/labels/targets_cx.parquet
+input:
+  k_slices: 16
+  max_series: 8
+  coverage:
+  - 0.05
+  - 0.95
+  coverage_jitter: 0.05
+  series_dropout: 0.1
+  orient_side: data/meta/laterality_train.parquet
+  aug:
+    out_px: 288
+    crop_mm: 160.0
+    fov_mm: 176.0
+    channels: center
+    p_mirror: 0.5
+    p_flip_up_down: 0.5
+    p_flip_front_back: 0.5
+    p_rotate: 0.5
+    rot_deg: 180.0
+  tta_mirror: false
+model:
+  backbone: resnet50.a1_in1k
+  pretrained: false
+  dim: 384
+  depth: 0
+  heads: 6
+  drop_path: 0.1
+  dropout: 0.1
+  head: spatial
+  pretrained_path: convergedmachine/RadImagenet/resnet50.pth
+  joint_layers: 2
+  orient_head: true
+  joint_margin_mm: 10.0
+  joint_max_tokens: 12000
+train:
+  epochs: 3
+  init_from: data/models/single_model_8_r50rad_288_spatial_os10_kd56_joint3d_orient_ft8_pl5m_bksyn_gold2_ft8.pt   # release v76-data
+  batch_size: 6
+  eval_batch_size: 8
+  lr_backbone: 2.5e-05
+  lr_head: 0.00025
+  orient_weight: 0.1
+  lr_rope: 2.5e-05
+  weight_decay: 0.05
+  warmup_epochs: 1
+  min_lr_ratio: 0.04
+  ema_decay: 0.998
+  grad_clip: 2.0
+  num_workers: 16
+  eval_every: 1
+  ckpt_minutes: 5
+  seed: 46
+  sampling: rarity
+  rarity_power: 1.0
+  include_gold: true
+  gold_weight: 0.8

@@ -1,0 +1,41 @@
+# The tissue segmentation model: SKM-TEA tissue segmentation in all 3 planes (the sagittal scans and their coronal and
+# axial reformats in 3.5 mm slabs, as our coronal / axial series), left knees mirrored, as our studies. The whole model
+# (save_model) finds the knee compartments in every series of our studies (knee.dataloading.tissue_rois), which give
+# the knee joint box of each study; the encoder alone (save_encoder) is in the format of model.pretrained_path of a
+# classification config. The test Dice stops improving after about 10 epochs, so 24 epochs are enough.
+name: seg_skm3_r50rad_288
+data:
+  cache: data/cache/v1
+  train_splits: [train, val]   # 119 scans; the 36 scans of the test split give the test Dice
+  test_splits: [test]
+  planes: [Sagittal, Coronal, Axial]
+  p_foreground: 0.67           # share of the samples drawn from the slices with tissue
+input:
+  aug:                         # the input of the classification model (the other transforms: GpuAugment defaults)
+    out_px: 288
+    crop_mm: 160.0
+    fov_mm: 176.0
+    channels: center
+    p_mirror: 0.0
+model:
+  backbone: resnet50.a1_in1k
+  pretrained_path: convergedmachine/RadImagenet/resnet50.pth
+  drop_path: 0.1
+  decoder_dim: 128
+train:
+  epochs: 24
+  iters_per_epoch: 250
+  batch_size: 64
+  lr_backbone: 0.0002
+  lr_head: 0.001
+  weight_decay: 0.05
+  warmup_epochs: 1
+  min_lr_ratio: 0.01
+  ema_decay: 0.998
+  grad_clip: 2.0
+  cell_weight: 0.25            # stage-4 cell loss
+  eval_every: 6
+  ckpt_minutes: 5
+  seed: 42
+save_encoder: data/models/r50rad_skm_seg3_288.pt
+save_model: data/models/skm_seg3_r50rad_288.pt

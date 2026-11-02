@@ -1,0 +1,10 @@
+{
+  "title": "rsna-knee-v76-code",
+  "id": "houjinghuang/rsna-knee-v76-code",
+  "licenses": [
+    {
+      "name": "other"
+    }
+  ],
+  "description": "The knee package of https://github.com/huanghoujing/kaggle_rsna2026_knee (code licence CC BY-NC 4.0: the LICENSE file in this dataset)."
+}
